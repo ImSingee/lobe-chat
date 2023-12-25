@@ -59,7 +59,7 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
       console.error(errorResult);
 
       return createErrorResponse(ChatErrorType.OpenAIBizError, {
-        endpoint: desensitizedEndpoint,
+        // endpoint: desensitizedEndpoint,
         error: errorResult,
       });
     }
@@ -69,7 +69,7 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
 
     // return as a GatewayTimeout error
     return createErrorResponse(ChatErrorType.InternalServerError, {
-      endpoint: desensitizedEndpoint,
+      // endpoint: desensitizedEndpoint,
       error: JSON.stringify(error),
     });
   }
