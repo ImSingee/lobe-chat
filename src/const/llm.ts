@@ -27,6 +27,7 @@ export const ModelTokens: Record<LanguageModel, number> = {
   [LanguageModel.GPT3_5_16K]: 16_385,
   [LanguageModel.GPT4]: 8196,
   [LanguageModel.GPT4_PREVIEW]: 128_000,
+  [LanguageModel.GPT4_PREVIEW_0125]: 128_000,
   [LanguageModel.GPT4_VISION_PREVIEW]: 128_000,
   [LanguageModel.GPT4_32K]: 32_768,
 };
