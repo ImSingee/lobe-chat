@@ -93,7 +93,7 @@ export const getProviderConfig = () => {
     ENABLED_PERPLEXITY: !!PERPLEXITY_API_KEY,
     PERPLEXITY_API_KEY,
 
-    ENABLED_ANTHROPIC: true,
+    ENABLED_ANTHROPIC: false,
     ANTHROPIC_API_KEY,
     ANTHROPIC_PROXY_URL: process.env.ANTHROPIC_PROXY_URL,
 
