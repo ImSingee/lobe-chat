@@ -36,7 +36,7 @@ declare global {
       // Anthropic Provider
       ANTHROPIC_API_KEY?: string;
       ANTHROPIC_PROXY_URL?: string;
-      
+
       // Mistral Provider
       MISTRAL_API_KEY?: string;
 
@@ -66,7 +66,7 @@ export const getProviderConfig = () => {
   const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY || '';
 
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
-  
+
   const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || '';
 
   // region format: iad1,sfo1
@@ -93,10 +93,10 @@ export const getProviderConfig = () => {
     ENABLED_PERPLEXITY: !!PERPLEXITY_API_KEY,
     PERPLEXITY_API_KEY,
 
-    ENABLED_ANTHROPIC: !!ANTHROPIC_API_KEY,
+    ENABLED_ANTHROPIC: true,
     ANTHROPIC_API_KEY,
     ANTHROPIC_PROXY_URL: process.env.ANTHROPIC_PROXY_URL,
-    
+
     ENABLED_MISTRAL: !!MISTRAL_API_KEY,
     MISTRAL_API_KEY,
 

@@ -162,7 +162,7 @@ class AgentRuntime {
         runtimeModel = this.initAnthropic(payload);
         break;
       }
-      
+
       case ModelProvider.Mistral: {
         runtimeModel = this.initMistral(payload);
         break;
@@ -256,12 +256,12 @@ class AgentRuntime {
   }
 
   private static initAnthropic(payload: JWTPayload) {
-    const { ANTHROPIC_API_KEY, ANTHROPIC_PROXY_URL } = getServerConfig();
-    const apiKey = apiKeyManager.pick(payload?.apiKey || ANTHROPIC_API_KEY);
-    const baseURL = payload?.endpoint || ANTHROPIC_PROXY_URL;
+    const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
+    const apiKey = apiKeyManager.pick(payload?.apiKey || OPENAI_API_KEY);
+    const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
     return new LobeAnthropicAI({ apiKey, baseURL });
   }
-  
+
   private static initMistral(payload: JWTPayload) {
     const { MISTRAL_API_KEY } = getServerConfig();
     const apiKey = apiKeyManager.pick(payload?.apiKey || MISTRAL_API_KEY);
