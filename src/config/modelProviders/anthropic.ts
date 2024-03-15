@@ -24,6 +24,7 @@ const Anthropic: ModelProviderCard = {
       description:
         'Fastest and most compact model for near-instant responsiveness. Quick and accurate targeted performance',
       displayName: 'Claude 3 Haiku',
+      hidden: true,
       id: 'claude-3-haiku-20240307',
       maxOutput: 4096,
       tokens: 200_000,
@@ -31,12 +32,14 @@ const Anthropic: ModelProviderCard = {
     },
     {
       displayName: 'Claude 2.1',
+      hidden: true,
       id: 'claude-2.1',
       maxOutput: 4096,
       tokens: 200_000,
     },
     {
       displayName: 'Claude 2.0',
+      hidden: true,
       id: 'claude-2.0',
       maxOutput: 4096,
       tokens: 100_000,
