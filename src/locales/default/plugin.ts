@@ -308,6 +308,33 @@ export default {
     skipDependencies: '跳过检查',
   },
   pluginList: '插件列表',
+  protocolInstall: {
+    actions: {
+      cancel: '取消',
+      install: '安装',
+    },
+    config: {
+      args: '参数',
+      command: '命令',
+      title: '配置信息',
+      type: {
+        http: '类型: http',
+        stdio: '类型: stdio',
+      },
+      url: 'URL',
+    },
+    messages: {
+      installError: '插件安装失败，请重试',
+      installSuccess: '插件 "{{name}}" 安装成功！',
+    },
+    meta: {
+      author: '作者',
+      source: '来源',
+      version: '版本',
+    },
+    title: '安装 MCP 插件',
+    warning: '⚠️ 请确认您信任此插件的来源，恶意插件可能会危害您的系统安全。',
+  },
   search: {
     apiName: {
       crawlMultiPages: '读取多个页面内容',
