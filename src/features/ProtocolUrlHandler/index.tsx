@@ -9,13 +9,7 @@ const ProtocolUrlHandler = () => {
   const [installRequest, setInstallRequest] = useState<McpInstallRequest | null>(null);
 
   const handleMcpInstallRequest = useCallback(
-    (data: {
-      marketId?: string;
-      metaParams: Record<string, string>;
-      pluginId: string;
-      schema: any;
-      source: string;
-    }) => {
+    (data: { marketId?: string; pluginId: string; schema: any; source: string }) => {
       // 将原始数据传递给子组件处理
       setInstallRequest(data as McpInstallRequest);
     },

@@ -64,7 +64,6 @@ function mapMarketIdToSource(marketId?: string): ProtocolSource {
 interface McpInstallParams {
   id: string;
   marketId?: string;
-  metaParams: Record<string, string>;
   schema?: any;
   type: string;
 }
@@ -83,13 +82,12 @@ export default class McpInstallController extends ControllerModule {
   public async handleInstallRequest(parsedData: McpInstallParams): Promise<boolean> {
     try {
       // 从参数中提取必需字段
-      const { type, id, schema: schemaParam, marketId } = parsedData;
+      const { id, schema: schemaParam, marketId } = parsedData;
 
-      if (type !== 'mcp' || !id || !schemaParam) {
+      if (!id || !schemaParam) {
         logger.warn(`🔧 [McpInstall] Missing required MCP parameters:`, {
           id: !!id,
           schema: !!schemaParam,
-          type,
         });
         return false;
       }
@@ -118,14 +116,6 @@ export default class McpInstallController extends ControllerModule {
         return false;
       }
 
-      // 提取 meta 参数
-      const metaParams: Record<string, string> = {};
-      for (const [key, value] of Object.entries(parsedData)) {
-        if (key.startsWith('meta_')) {
-          metaParams[key] = value;
-        }
-      }
-
       // 映射协议来源
       const source = mapMarketIdToSource(marketId);
 
@@ -140,7 +130,6 @@ export default class McpInstallController extends ControllerModule {
       // 广播安装请求到前端
       const installRequest = {
         marketId,
-        metaParams,
         pluginId: id,
         schema: mcpSchema,
         source,

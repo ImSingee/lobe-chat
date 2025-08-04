@@ -11,8 +11,6 @@ export interface ProtocolBroadcastEvents {
   mcpInstallRequest: (data: {
     /** 市场来源ID */
     marketId?: string;
-    /** 元数据参数 */
-    metaParams: Record<string, string>;
     /** 插件ID */
     pluginId: string;
     /** MCP Schema 对象 */

@@ -46,7 +46,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
 export interface McpInstallRequest {
   marketId?: string;
-  metaParams: Record<string, string>;
   pluginId: string;
   schema: McpInstallSchema;
   source: string;

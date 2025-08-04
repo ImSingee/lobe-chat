@@ -25,18 +25,12 @@ describe('Protocol', () => {
         id: 'edgeone-mcp',
         schema,
         marketId: 'higress',
-        metaParams: {
-          author: 'Higress Team',
-          category: 'api-integration',
-        },
       });
 
       expect(url).toMatch(/^lobehub:\/\/plugin\/install\?/);
       expect(url).toContain('type=mcp');
       expect(url).toContain('id=edgeone-mcp');
       expect(url).toContain('marketId=higress');
-      expect(url).toContain('meta_author=Higress+Team'); // URLSearchParams encodes space as +
-      expect(url).toContain('meta_category=api-integration');
 
       // Verify schema is URL encoded
       const urlObj = new URL(url);
@@ -110,7 +104,6 @@ describe('Protocol', () => {
         id: 'test-mcp',
         schema,
         marketId: 'lobehub',
-        metaParams: { category: 'test' },
       });
 
       const parsed = parseProtocolUrl(url);
@@ -121,7 +114,6 @@ describe('Protocol', () => {
       expect(parsed?.params.type).toBe('mcp');
       expect(parsed?.params.id).toBe('test-mcp');
       expect(parsed?.params.marketId).toBe('lobehub');
-      expect(parsed?.params.meta_category).toBe('test');
       expect(parsed?.originalUrl).toBe(url);
 
       // 验证 schema 可以被解析

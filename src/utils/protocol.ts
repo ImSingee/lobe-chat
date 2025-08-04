@@ -149,14 +149,6 @@ export function parseProtocolUrl(url: string): ProtocolUrlParsed | null {
     // 解析可选参数
     const marketId = searchParams.get('marketId') || undefined;
 
-    // 解析 meta_* 参数
-    const metaParams: Record<string, string> = {};
-    for (const [key, value] of searchParams.entries()) {
-      if (key.startsWith('meta_')) {
-        metaParams[key] = value;
-      }
-    }
-
     // 映射协议来源
     const source = mapMarketIdToSource(marketId);
 
@@ -166,7 +158,6 @@ export function parseProtocolUrl(url: string): ProtocolUrlParsed | null {
       params: {
         id,
         marketId,
-        metaParams,
         type,
       },
       schema: mcpSchema,
@@ -191,14 +182,12 @@ export function generateRFCProtocolUrl(params: {
   id: string;
   /** Marketplace ID */
   marketId?: string;
-  /** 元数据参数 */
-  metaParams?: Record<string, string>;
   /** MCP Schema 对象 */
   schema: McpSchema;
   /** 协议 scheme (默认: lobehub) */
   scheme?: string;
 }): string {
-  const { id, schema, marketId, metaParams = {}, scheme = 'lobehub' } = params;
+  const { id, schema, marketId, scheme = 'lobehub' } = params;
 
   // 验证 schema.identifier 与 id 匹配
   if (schema.identifier !== id) {
@@ -227,15 +216,6 @@ export function generateRFCProtocolUrl(params: {
   // 可选参数
   if (marketId) {
     searchParams.set('marketId', marketId);
-  }
-
-  // 添加 meta_* 参数
-  for (const [key, value] of Object.entries(metaParams)) {
-    if (!key.startsWith('meta_')) {
-      searchParams.set(`meta_${key}`, value);
-    } else {
-      searchParams.set(key, value);
-    }
   }
 
   return `${baseUrl}?${searchParams.toString()}`;

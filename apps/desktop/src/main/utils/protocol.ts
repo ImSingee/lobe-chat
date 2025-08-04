@@ -146,14 +146,12 @@ export function generateRFCProtocolUrl(params: {
   id: string;
   /** Marketplace ID */
   marketId?: string;
-  /** 元数据参数 */
-  metaParams?: Record<string, string>;
   /** MCP Schema 对象 */
   schema: McpSchema;
   /** 协议 scheme (默认: lobehub) */
   scheme?: string;
 }): string {
-  const { id, schema, marketId, metaParams = {}, scheme = 'lobehub' } = params;
+  const { id, schema, marketId, scheme = 'lobehub' } = params;
 
   // 验证 schema.identifier 与 id 匹配
   if (schema.identifier !== id) {
@@ -184,15 +182,6 @@ export function generateRFCProtocolUrl(params: {
     searchParams.set('marketId', marketId);
   }
 
-  // 添加 meta_* 参数
-  for (const [key, value] of Object.entries(metaParams)) {
-    if (!key.startsWith('meta_')) {
-      searchParams.set(`meta_${key}`, value);
-    } else {
-      searchParams.set(key, value);
-    }
-  }
-
   return `${baseUrl}?${searchParams.toString()}`;
 }
 
@@ -215,12 +204,8 @@ export function generateRFCProtocolUrl(params: {
  *       args: ['-y', '@higress/edgeone-mcp']
  *     }
  *   },
- *   marketId: 'higress',
- *   metaParams: {
- *     author: 'Higress Team',
- *     category: 'api-integration'
- *   }
+ *   marketId: 'higress'
  * });
- * // Result: lobehub://plugin/install?type=mcp&id=edgeone-mcp&schema=%7B%22identifier%22%3A...&marketId=higress&meta_author=Higress%20Team&meta_category=api-integration
+ * // Result: lobehub://plugin/install?type=mcp&id=edgeone-mcp&schema=%7B%22identifier%22%3A...&marketId=higress
  * ```
  */

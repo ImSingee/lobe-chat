@@ -18,19 +18,19 @@ export enum ProtocolSource {
  * MCP Schema - stdio 配置类型
  */
 export interface McpStdioConfig {
-  type: 'stdio';
-  command: string;
   args?: string[];
+  command: string;
   env?: Record<string, string>;
+  type: 'stdio';
 }
 
 /**
  * MCP Schema - http 配置类型
  */
 export interface McpHttpConfig {
+  headers?: Record<string, string>;
   type: 'http';
   url: string;
-  headers?: Record<string, string>;
 }
 
 /**
@@ -43,20 +43,20 @@ export type McpConfig = McpStdioConfig | McpHttpConfig;
  * 符合 RFC 0001 定义
  */
 export interface McpSchema {
-  /** 插件唯一标识符，必须与URL中的id参数匹配 */
-  identifier: string;
-  /** 插件名称 */
-  name: string;
   /** 插件作者 */
   author: string;
+  /** 插件配置 */
+  config: McpConfig;
   /** 插件描述 */
   description: string;
   /** 插件主页 */
   homepage?: string;
+  /** 插件唯一标识符，必须与URL中的id参数匹配 */
+  identifier: string;
+  /** 插件名称 */
+  name: string;
   /** 插件版本 (semver) */
   version: string;
-  /** 插件配置 */
-  config: McpConfig;
 }
 
 /**
@@ -64,39 +64,38 @@ export interface McpSchema {
  * lobehub://plugin/install?type=mcp&id=xxx&schema=xxx&marketId=xxx&meta_*=xxx
  */
 export interface McpInstallProtocolParamsRFC {
-  /** 插件类型，对于 MCP 固定为 'mcp' */
-  type: 'mcp';
-  /** 插件的唯一标识符 */
-  id: string;
-  /** Base64URL 编码的 MCP Schema 对象 */
-  schema: string;
-  /** 提供该插件的 Marketplace 的唯一标识符 */
-  marketId?: string;
   /** 可选的 UI 显示元数据，以 meta_ 为前缀 */
   [key: `meta_${string}`]: string | undefined;
+  /** 插件的唯一标识符 */
+  id: string;
+  /** 提供该插件的 Marketplace 的唯一标识符 */
+  marketId?: string;
+  /** Base64URL 编码的 MCP Schema 对象 */
+  schema: string;
+  /** 插件类型，对于 MCP 固定为 'mcp' */
+  type: 'mcp';
 }
 
 /**
  * 协议URL解析结果
  */
 export interface ProtocolUrlParsed {
-  /** URL类型 (如: 'plugin') */
-  urlType: string;
   /** 操作类型 (如: 'install') */
   action: 'install' | 'configure' | 'update';
-  /** 插件类型 (如: 'mcp') */
-  type: 'mcp' | 'plugin';
   /** 解析后的参数 */
   params: {
     id: string;
-    type: string;
     marketId?: string;
-    metaParams: Record<string, string>;
+    type: string;
   };
   /** MCP Schema 对象 */
   schema: McpSchema;
   /** 协议来源 */
   source: ProtocolSource;
+  /** 插件类型 (如: 'mcp') */
+  type: 'mcp' | 'plugin';
+  /** URL类型 (如: 'plugin') */
+  urlType: string;
 }
 
 /**
