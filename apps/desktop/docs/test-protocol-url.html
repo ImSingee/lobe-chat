@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LobeChat Protocol URL Test (React)</title>
+    <title>LobeHub Desktop Protocol URL Test (React)</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         body { font-family: system-ui; margin: 40px; line-height: 1.6; }
-        .test-link { 
-            display: inline-block; 
-            padding: 12px 24px; 
-            background: #000000; 
-            color: white; 
-            text-decoration: none; 
-            border-radius: 6px; 
-            margin: 8px 0; 
+        .test-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #000000;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 8px 0;
             cursor: pointer;
             border: none;
             font-family: inherit;
         }
         .test-link:hover { background: #333333; }
-        .url-box { 
-            background: #f5f5f5; 
-            padding: 12px; 
-            border-radius: 4px; 
-            word-break: break-all; 
-            margin: 8px 0; 
-            font-family: monospace; 
+        .url-box {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 4px;
+            word-break: break-all;
+            margin: 8px 0;
+            font-family: monospace;
         }
         .section { margin: 32px 0; }
         .scheme-selector {
@@ -44,6 +44,75 @@
             border-radius: 8px;
             padding: 20px;
             margin: 16px 0;
+        }
+        .config-panel-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+        }
+        @media (max-width: 1024px) {
+            .config-panel-content {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .config-right {
+                order: -1;
+            }
+        }
+        .config-left {
+            min-width: 0;
+        }
+        .config-right {
+            min-width: 0;
+        }
+        .json-preview {
+            background: #ffffff;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .json-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .json-preview-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .copy-btn {
+            padding: 4px 8px;
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+        }
+        .copy-btn:hover {
+            background: #e0e0e0;
+        }
+        .url-preview {
+            background: #f5f5f5;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 11px;
+            word-break: break-all;
+            margin-top: 12px;
+            color: #444;
         }
         .config-form {
             display: grid;
@@ -116,10 +185,10 @@
 </head>
 <body>
     <div id="root"></div>
-    
+
     <script type="text/babel">
         const { useState, useEffect, useCallback } = React;
-        
+
         // Configuration for test cases
         const INITIAL_TEST_CONFIG = {
             defaultScheme: 'lobehub-dev',
@@ -197,7 +266,7 @@
                             type: 'stdio',
                             command: 'npx',
                             args: ['-y', '@github/mcp-repo-analyzer'],
-                            env: { 
+                            env: {
                                 NODE_ENV: 'production',
                                 GITHUB_TOKEN: 'ghp_your_github_token',
                                 GITHUB_API_URL: 'https://api.github.com'
@@ -220,6 +289,27 @@
                             args: ['test script.js', 'arg/with/slashes']
                         }
                     }
+                },
+                custom: {
+                    id: 'my-custom-http-mcp',
+                    marketId: null,
+                    schema: {
+                        identifier: 'my-custom-http-mcp',
+                        name: 'My Custom HTTP MCP Server',
+                        author: 'Custom Developer',
+                        description: 'A custom HTTP-based MCP server for personal projects',
+                        version: '1.0.0',
+                        homepage: 'https://github.com/username/my-custom-mcp',
+                        config: {
+                            type: 'http',
+                            url: 'https://my-server.example.com/mcp',
+                            headers: {
+                                'Authorization': 'Bearer your-api-token',
+                                'X-Custom-Header': 'custom-value',
+                                'User-Agent': 'LobeChat-Custom/1.0'
+                            }
+                        }
+                    }
                 }
             }
         };
@@ -227,22 +317,22 @@
                 // Helper functions
         function generateRFCProtocolUrl(params) {
             const { id, schema, marketId, scheme = INITIAL_TEST_CONFIG.defaultScheme } = params;
-            
+
             const baseUrl = `${scheme}://${INITIAL_TEST_CONFIG.baseProtocolPath}`;
             const searchParams = new URLSearchParams();
-            
+
             if (marketId) {
                 searchParams.set('marketId', marketId);
             }
-            
+
             searchParams.set('id', id);
-            
+
             // 只有在 schema 存在时才添加 schema 参数
             if (schema) {
             const schemaJson = JSON.stringify(schema);
             searchParams.set('schema', schemaJson);
             }
-            
+
             return `${baseUrl}?${searchParams.toString()}`;
         }
 
@@ -261,8 +351,8 @@
                     <h2>Protocol Version Selection:</h2>
                     <div className="scheme-selector">
                         <label>Select Protocol Type:</label>
-                        <select 
-                            value={scheme} 
+                        <select
+                            value={scheme}
                             onChange={(e) => onSchemeChange(e.target.value)}
                         >
                             <option value="lobehub-dev">lobehub-dev:// (Development)</option>
@@ -292,7 +382,7 @@
 
         function JsonInput({ value, onChange, placeholder = "", rows = 3 }) {
             const [isValid, setIsValid] = useState(true);
-            
+
             const handleChange = (e) => {
                 const newValue = e.target.value;
                 try {
@@ -335,19 +425,47 @@
             };
 
             const updateConfigField = (field, value) => {
+                let newConfig = {
+                    ...config.schema.config,
+                    [field]: value
+                };
+
+                // 当切换连接类型时，重置配置以避免混淆
+                if (field === 'type') {
+                    if (value === 'stdio') {
+                        newConfig = {
+                            type: 'stdio',
+                            command: 'npx',
+                            args: ['-y', 'my-custom-mcp-package'],
+                            env: {
+                                NODE_ENV: 'production',
+                                CUSTOM_API_KEY: 'your-api-key-here'
+                            }
+                        };
+                    } else if (value === 'http') {
+                        newConfig = {
+                            type: 'http',
+                            url: 'https://my-server.example.com/mcp',
+                            headers: {
+                                'Authorization': 'Bearer your-api-token',
+                                'X-Custom-Header': 'custom-value',
+                                'User-Agent': 'LobeChat-Custom/1.0'
+                            }
+                        };
+                    }
+                }
+
                 onConfigChange(type, {
                     ...config,
                     schema: {
                         ...config.schema,
-                        config: {
-                            ...config.schema.config,
-                            [field]: value
-                        }
+                        config: newConfig
                     }
                 });
             };
 
             const isLobehub = type === 'lobehub';
+            const isCustom = type === 'custom';
             const isStdio = config.schema?.config?.type === 'stdio';
             const isHttp = config.schema?.config?.type === 'http';
 
@@ -364,11 +482,11 @@
                                 placeholder="e.g., upstash-context7, github-mcp, notion-mcp"
                             />
                         </div>
-                        <div style={{ 
-                            background: '#e6f4ff', 
-                            border: '1px solid #91caff', 
-                            borderRadius: '6px', 
-                            padding: '12px', 
+                        <div style={{
+                            background: '#e6f4ff',
+                            border: '1px solid #91caff',
+                            borderRadius: '6px',
+                            padding: '12px',
                             marginTop: '16px',
                             fontSize: '14px',
                             color: '#0958d9'
@@ -386,6 +504,24 @@
 
             return (
                 <div className="config-form">
+                    {isCustom && (
+                        <div style={{
+                            background: '#f6ffed',
+                            border: '1px solid #b7eb8f',
+                            borderRadius: '6px',
+                            padding: '12px',
+                            marginBottom: '16px',
+                            fontSize: '14px',
+                            color: '#389e0d'
+                        }}>
+                            <strong>🛠️ Custom MCP Plugin</strong>
+                            <p style={{ margin: '4px 0 0 0' }}>
+                                自定义 MCP 插件，无需 MarketId。支持 stdio 和 HTTP 两种连接方式。
+                                <br />
+                                您需要完整配置所有必需的参数和连接信息。
+                            </p>
+                        </div>
+                    )}
                     <div className="form-row">
                         <div className="form-group">
                             <label>Plugin ID:</label>
@@ -395,14 +531,35 @@
                                 onChange={(e) => updateField('id', e.target.value)}
                             />
                         </div>
-                        <div className="form-group">
-                            <label>Market ID:</label>
-                            <input
-                                type="text"
-                                value={config.marketId || ''}
-                                onChange={(e) => updateField('marketId', e.target.value)}
-                            />
-                        </div>
+                        {!isCustom && (
+                            <div className="form-group">
+                                <label>Market ID:</label>
+                                <input
+                                    type="text"
+                                    value={config.marketId || ''}
+                                    onChange={(e) => updateField('marketId', e.target.value)}
+                                />
+                            </div>
+                        )}
+                        {isCustom && (
+                            <div className="form-group">
+                                <label>Connection Type <span style={{ color: '#ff4d4f' }}>*</span>:</label>
+                                <select
+                                    value={config.schema?.config?.type || 'stdio'}
+                                    onChange={(e) => updateConfigField('type', e.target.value)}
+                                    style={{
+                                        borderColor: config.schema?.config?.type ? '#d0d0d0' : '#ff7875',
+                                        backgroundColor: config.schema?.config?.type ? '' : '#fff2f0'
+                                    }}
+                                >
+                                    <option value="stdio">Stdio (Local Command)</option>
+                                    <option value="http">HTTP (Remote Server)</option>
+                                </select>
+                                <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                                    📡 选择 MCP 服务器的连接方式
+                                </small>
+                            </div>
+                        )}
                     </div>
                     <div className="form-row">
                         <div className="form-group">
@@ -457,7 +614,7 @@
                                     value={config.schema.config.url || ''}
                                     onChange={(e) => updateConfigField('url', e.target.value)}
                                     placeholder="https://mcp.example.com/plugin-name/unique-id"
-                                    style={{ 
+                                    style={{
                                         borderColor: config.schema.config.url ? '#d0d0d0' : '#ff7875',
                                         backgroundColor: config.schema.config.url ? '' : '#fff2f0'
                                     }}
@@ -518,14 +675,83 @@
             );
         }
 
-        function ConfigPanel({ configs, onConfigChange, onResetToDefaults }) {
+        function JsonPreview({ activeTab, config, scheme }) {
+            const [copySuccess, setCopySuccess] = useState('');
+
+            // 生成预览数据
+            const getPreviewData = () => {
+                if (activeTab === 'lobehub') {
+                    return {
+                        id: config.id,
+                        marketId: config.marketId
+                    };
+                } else if (activeTab === 'custom') {
+                    return {
+                        id: config.id,
+                        schema: config.schema
+                    };
+                } else {
+                    return {
+                        id: config.id,
+                        schema: config.schema,
+                        marketId: config.marketId
+                    };
+                }
+            };
+
+            const previewData = getPreviewData();
+            const generatedUrl = generateRFCProtocolUrl({ ...previewData, scheme });
+
+            const copyToClipboard = async (text, type) => {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    setCopySuccess(type);
+                    setTimeout(() => setCopySuccess(''), 2000);
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                }
+            };
+
+            return (
+                <div className="config-right">
+                    <div className="json-preview-header">
+                        <div className="json-preview-title">📋 Parameters Preview</div>
+                        <button
+                            className="copy-btn"
+                            onClick={() => copyToClipboard(JSON.stringify(previewData, null, 2), 'json')}
+                        >
+                            {copySuccess === 'json' ? '✅ Copied!' : '📋 Copy JSON'}
+                        </button>
+                    </div>
+                    <div className="json-preview">
+{JSON.stringify(previewData, null, 2)}
+                    </div>
+
+                    <div className="json-preview-header" style={{ marginTop: '20px' }}>
+                        <div className="json-preview-title">🔗 Generated URL</div>
+                        <button
+                            className="copy-btn"
+                            onClick={() => copyToClipboard(generatedUrl, 'url')}
+                        >
+                            {copySuccess === 'url' ? '✅ Copied!' : '📋 Copy URL'}
+                        </button>
+                    </div>
+                    <div className="url-preview">
+{generatedUrl}
+                    </div>
+                </div>
+            );
+        }
+
+        function ConfigPanel({ configs, onConfigChange, onResetToDefaults, scheme }) {
             const [activeTab, setActiveTab] = useState('lobehub');
-            
+
             const tabs = [
                 { key: 'lobehub', label: 'LobeHub Official' },
                 { key: 'mcprouter', label: 'MCPRouter' },
                 { key: 'higress', label: 'Higress Marketplace' },
                 { key: 'smithery', label: 'Smithery Marketplace' },
+                { key: 'custom', label: 'Custom MCP' },
                 { key: 'github', label: 'GitHub MCP' },
                 { key: 'special', label: 'Special Cases' }
             ];
@@ -547,23 +773,33 @@
                             ))}
                         </div>
 
-                        {tabs.map(tab => (
-                            <div 
-                                key={tab.key}
-                                style={{ display: activeTab === tab.key ? 'block' : 'none' }}
-                            >
-                                <ConfigForm
-                                    type={tab.key}
-                                    config={configs[tab.key]}
-                                    onConfigChange={onConfigChange}
-                                />
-                            </div>
-                        ))}
+                        <div className="config-panel-content">
+                            <div className="config-left">
+                                {tabs.map(tab => (
+                                    <div
+                                        key={tab.key}
+                                        style={{ display: activeTab === tab.key ? 'block' : 'none' }}
+                                    >
+                                        <ConfigForm
+                                            type={tab.key}
+                                            config={configs[tab.key]}
+                                            onConfigChange={onConfigChange}
+                                        />
+                                    </div>
+                                ))}
 
-                        <div style={{ marginTop: '20px' }}>
-                            <button className="generate-btn" onClick={onResetToDefaults}>
-                                🔄 Reset to Defaults
-                            </button>
+                                <div style={{ marginTop: '20px' }}>
+                                    <button className="generate-btn" onClick={onResetToDefaults}>
+                                        🔄 Reset to Defaults
+                                    </button>
+                                </div>
+                            </div>
+
+                            <JsonPreview
+                                activeTab={activeTab}
+                                config={configs[activeTab]}
+                                scheme={scheme}
+                            />
                         </div>
                     </div>
                 </div>
@@ -574,8 +810,9 @@
             const testCases = [
                 { key: 'lobehub', title: 'LobeHub Official Plugin (Upstash Context7)', emoji: '🧠' },
                 { key: 'mcprouter', title: 'MCPRouter Marketplace (Amap Maps)', emoji: '🗺️' },
-                { key: 'higress', title: 'Higress Marketplace (E2B Dev Environment)', emoji: '🛠️' },
+                { key: 'higress', title: 'Higress Marketplace (E2B Dev Environment)', emoji: '⚡' },
                 { key: 'smithery', title: 'Smithery Marketplace (Weather API)', emoji: '🌤️' },
+                { key: 'custom', title: 'Custom MCP Plugin', emoji: '🛠️' },
                 { key: 'github', title: 'GitHub Community MCP', emoji: '🐙' },
                 { key: 'special', title: 'Special Characters Test', emoji: '✨' }
             ];
@@ -588,33 +825,36 @@
             return (
                 <div className="section">
                     <h2>📋 Test Cases</h2>
-                    
+
                     {testCases.map((testCase, index) => {
                         const config = configs[testCase.key];
-                        
-                                                // 对于 LobeHub Official，只传递 id 和 marketId
-                        const urlParams = testCase.key === 'lobehub' 
+
+                        // 对于 LobeHub Official，只传递 id 和 marketId
+                        // 对于 Custom，不传递 marketId（因为是 null）
+                        const urlParams = testCase.key === 'lobehub'
                             ? { id: config.id, marketId: config.marketId, scheme }
+                            : testCase.key === 'custom'
+                            ? { id: config.id, schema: config.schema, scheme }
                             : {
                                 id: config.id,
                                 schema: config.schema,
                                 marketId: config.marketId,
-                    scheme
+                                scheme
                             };
-                            
+
                         const url = generateRFCProtocolUrl(urlParams);
-                        
+
                         // 显示名称：LobeHub 使用 ID，其他使用 schema.name
-                        const displayName = testCase.key === 'lobehub' 
-                            ? config.id 
+                        const displayName = testCase.key === 'lobehub'
+                            ? config.id
                             : (config.schema?.name || config.id);
 
                         return (
                             <div key={testCase.key}>
                                 <h3>{index + 1}. {testCase.title}</h3>
                                 <div className="url-box">{url}</div>
-                                <button 
-                                    className="test-link" 
+                                <button
+                                    className="test-link"
                                     onClick={() => handleTestClick(url)}
                                 >
                                     {testCase.emoji} Test Install {displayName}
@@ -665,25 +905,26 @@
             }, []);
 
             useEffect(() => {
-                console.log('🚀 LobeChat Protocol URL Test (React) initialized');
+                console.log('🚀 LobeHub Desktop Protocol URL Test (React) initialized');
             }, []);
 
             return (
                 <div>
-                    <h1>🚀 LobeChat Protocol URL Test</h1>
-                    
+                    <h1>🚀 LobeHub Desktop Protocol URL Test</h1>
+
                     <SchemeSelector scheme={scheme} onSchemeChange={setScheme} />
-                    
+
                     <TestSteps />
-                    
-                    <ConfigPanel 
+
+                    <ConfigPanel
                         configs={configs}
                         onConfigChange={handleConfigChange}
                         onResetToDefaults={handleResetToDefaults}
+                        scheme={scheme}
                     />
-                    
+
                     <TestCases scheme={scheme} configs={configs} />
-                    
+
                     <ManualTesting scheme={scheme} configs={configs} />
                 </div>
             );
@@ -702,4 +943,4 @@
         ReactDOM.render(<ProtocolTester />, document.getElementById('root'));
     </script>
 </body>
-</html> 
+</html>
