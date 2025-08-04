@@ -85,11 +85,11 @@ function validateMcpSchema(schema: any): schema is McpSchema {
  * 解析 lobehub:// 协议 URL (支持多版本协议)
  *
  * 支持的URL格式：
- * - lobehub://plugin/install?type=mcp&id=figma&schema=xxx&marketId=lobehub
+ * - lobehub://plugin/install?id=figma&schema=xxx&marketId=lobehub
  * - lobehub://plugin/configure?id=xxx&...
- * - lobehub-bet://plugin/install?type=mcp&id=figma&schema=xxx&marketId=lobehub
- * - lobehub-nightly://plugin/install?type=mcp&id=figma&schema=xxx&marketId=lobehub
- * - lobehub-dev://plugin/install?type=mcp&id=figma&schema=xxx&marketId=lobehub
+ * - lobehub-bet://plugin/install?id=figma&schema=xxx&marketId=lobehub
+ * - lobehub-nightly://plugin/install?id=figma&schema=xxx&marketId=lobehub
+ * - lobehub-dev://plugin/install?id=figma&schema=xxx&marketId=lobehub
  *
  * @param url 协议 URL
  * @returns 解析结果，包含基本结构和所有查询参数
@@ -206,6 +206,6 @@ export function generateRFCProtocolUrl(params: {
  *   },
  *   marketId: 'higress'
  * });
- * // Result: lobehub://plugin/install?type=mcp&id=edgeone-mcp&schema=%7B%22identifier%22%3A...&marketId=higress
+ * // Result: lobehub://plugin/install?id=edgeone-mcp&schema=%7B%22identifier%22%3A...&marketId=higress
  * ```
  */

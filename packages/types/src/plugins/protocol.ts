@@ -61,7 +61,7 @@ export interface McpSchema {
 
 /**
  * RFC 0001 协议参数
- * lobehub://plugin/install?type=mcp&id=xxx&schema=xxx&marketId=xxx&meta_*=xxx
+ * lobehub://plugin/install?id=xxx&schema=xxx&marketId=xxx&meta_*=xxx
  */
 export interface McpInstallProtocolParamsRFC {
   /** 可选的 UI 显示元数据，以 meta_ 为前缀 */

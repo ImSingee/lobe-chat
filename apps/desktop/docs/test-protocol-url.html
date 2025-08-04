@@ -124,7 +124,6 @@
         const INITIAL_TEST_CONFIG = {
             defaultScheme: 'lobehub-dev',
             baseProtocolPath: 'plugin/install',
-            defaultType: 'mcp',
             testCases: {
                 lobehub: {
                     id: 'upstash-context7',
@@ -232,17 +231,16 @@
             const baseUrl = `${scheme}://${INITIAL_TEST_CONFIG.baseProtocolPath}`;
             const searchParams = new URLSearchParams();
             
-            searchParams.set('type', INITIAL_TEST_CONFIG.defaultType);
+            if (marketId) {
+                searchParams.set('marketId', marketId);
+            }
+            
             searchParams.set('id', id);
             
             // 只有在 schema 存在时才添加 schema 参数
             if (schema) {
             const schemaJson = JSON.stringify(schema);
             searchParams.set('schema', schemaJson);
-            }
-            
-            if (marketId) {
-                searchParams.set('marketId', marketId);
             }
             
             return `${baseUrl}?${searchParams.toString()}`;

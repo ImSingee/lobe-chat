@@ -77,10 +77,10 @@ function mapMarketIdToSource(marketId?: string): ProtocolSource {
  * 解析 lobehub:// 协议 URL (支持多版本协议)
  *
  * 支持的URL格式：
- * - lobehub://plugin/install?type=mcp&id=figma&schema=xxx&marketId=lobehub
- * - lobehub://plugin/install?type=plugin&id=xxx&...
- * - lobehub-nightly://plugin/install?type=mcp&id=figma&schema=xxx&marketId=lobehub
- * - lobehub-beta://plugin/install?type=mcp&id=figma&schema=xxx&marketId=lobehub
+ * - lobehub://plugin/install?id=figma&schema=xxx&marketId=lobehub
+ * - lobehub://plugin/install?id=xxx&...
+ * - lobehub-nightly://plugin/install?id=figma&schema=xxx&marketId=lobehub
+ * - lobehub-beta://plugin/install?id=figma&schema=xxx&marketId=lobehub
  *
  * @param url 协议 URL
  * @returns 解析结果

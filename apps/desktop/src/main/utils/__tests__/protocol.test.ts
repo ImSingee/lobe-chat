@@ -28,7 +28,6 @@ describe('Protocol', () => {
       });
 
       expect(url).toMatch(/^lobehub:\/\/plugin\/install\?/);
-      expect(url).toContain('type=mcp');
       expect(url).toContain('id=edgeone-mcp');
       expect(url).toContain('marketId=higress');
 
@@ -64,7 +63,6 @@ describe('Protocol', () => {
       });
 
       expect(url).toMatch(/^lobehub:\/\/plugin\/install\?/);
-      expect(url).toContain('type=mcp');
       expect(url).toContain('id=awesome-api');
       expect(url).toContain('marketId=smithery');
     });
@@ -127,12 +125,11 @@ describe('Protocol', () => {
     });
 
     it('should parse URLs with any action', () => {
-      const result = parseProtocolUrl('lobehub://plugin/configure?id=test&type=mcp');
+      const result = parseProtocolUrl('lobehub://plugin/configure?id=test');
       expect(result).toBeTruthy();
       expect(result?.urlType).toBe('plugin');
       expect(result?.action).toBe('configure');
       expect(result?.params.id).toBe('test');
-      expect(result?.params.type).toBe('mcp');
     });
 
     it('should parse URLs with any query parameters', () => {

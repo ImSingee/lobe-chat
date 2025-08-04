@@ -65,7 +65,6 @@ interface McpInstallParams {
   id: string;
   marketId?: string;
   schema?: any;
-  type: string;
 }
 
 /**
@@ -84,46 +83,58 @@ export default class McpInstallController extends ControllerModule {
       // 从参数中提取必需字段
       const { id, schema: schemaParam, marketId } = parsedData;
 
-      if (!id || !schemaParam) {
+      if (!id) {
         logger.warn(`🔧 [McpInstall] Missing required MCP parameters:`, {
           id: !!id,
-          schema: !!schemaParam,
-        });
-        return false;
-      }
-
-      // 解析和验证 MCP Schema
-      let mcpSchema: McpSchema;
-
-      try {
-        mcpSchema = JSON.parse(schemaParam);
-      } catch (error) {
-        logger.error(`🔧 [McpInstall] Failed to parse MCP schema:`, error);
-        return false;
-      }
-
-      if (!validateMcpSchema(mcpSchema)) {
-        logger.error(`🔧 [McpInstall] Invalid MCP Schema structure`);
-        return false;
-      }
-
-      // 验证 identifier 与 id 参数匹配
-      if (mcpSchema.identifier !== id) {
-        logger.error(`🔧 [McpInstall] Schema identifier does not match URL id parameter:`, {
-          schemaId: mcpSchema.identifier,
-          urlId: id,
         });
         return false;
       }
 
       // 映射协议来源
       const source = mapMarketIdToSource(marketId);
+      const isOfficialMarket = source === ProtocolSource.OFFICIAL;
+
+      // 对于官方市场，schema 是可选的；对于第三方市场，schema 是必需的
+      if (!isOfficialMarket && !schemaParam) {
+        logger.warn(`🔧 [McpInstall] Schema is required for third-party marketplace:`, {
+          marketId,
+          source,
+        });
+        return false;
+      }
+
+      let mcpSchema: McpSchema | undefined;
+
+      // 如果提供了 schema 参数，则解析和验证
+      if (schemaParam) {
+        try {
+          mcpSchema = JSON.parse(schemaParam);
+        } catch (error) {
+          logger.error(`🔧 [McpInstall] Failed to parse MCP schema:`, error);
+          return false;
+        }
+
+        if (!validateMcpSchema(mcpSchema)) {
+          logger.error(`🔧 [McpInstall] Invalid MCP Schema structure`);
+          return false;
+        }
+
+        // 验证 identifier 与 id 参数匹配
+        if (mcpSchema.identifier !== id) {
+          logger.error(`🔧 [McpInstall] Schema identifier does not match URL id parameter:`, {
+            schemaId: mcpSchema.identifier,
+            urlId: id,
+          });
+          return false;
+        }
+      }
 
       logger.debug(`🔧 [McpInstall] MCP install request validated:`, {
+        hasSchema: !!mcpSchema,
         marketId,
         pluginId: id,
-        pluginName: mcpSchema.name,
-        pluginVersion: mcpSchema.version,
+        pluginName: mcpSchema?.name || 'Unknown',
+        pluginVersion: mcpSchema?.version || 'Unknown',
         source,
       });
 
@@ -136,9 +147,10 @@ export default class McpInstallController extends ControllerModule {
       };
 
       logger.debug(`🔧 [McpInstall] Broadcasting install request:`, {
+        hasSchema: !!installRequest.schema,
         marketId: installRequest.marketId,
         pluginId: installRequest.pluginId,
-        pluginName: installRequest.schema.name,
+        pluginName: installRequest.schema?.name || 'Unknown',
       });
 
       // 通过应用实例广播到前端
