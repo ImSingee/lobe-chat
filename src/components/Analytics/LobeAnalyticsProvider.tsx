@@ -11,6 +11,8 @@ import { isDev } from '@/utils/env';
 type Props = {
   children: ReactNode;
   debugPosthog: boolean;
+  ga4Enabled: boolean;
+  ga4MeasurementId: string;
   posthogEnabled: boolean;
   posthogHost: string;
   posthogToken: string;
@@ -19,7 +21,15 @@ type Props = {
 let analyticsInstance: ReturnType<typeof createSingletonAnalytics> | null = null;
 
 export const LobeAnalyticsProvider = memo(
-  ({ children, posthogHost, posthogToken, posthogEnabled, debugPosthog }: Props) => {
+  ({
+    children,
+    posthogHost,
+    posthogToken,
+    posthogEnabled,
+    debugPosthog,
+    ga4MeasurementId,
+    ga4Enabled,
+  }: Props) => {
     const analytics = useMemo(() => {
       if (analyticsInstance) {
         return analyticsInstance;
@@ -29,6 +39,14 @@ export const LobeAnalyticsProvider = memo(
         business: BUSINESS_LINE,
         debug: isDev,
         providers: {
+          ga4: {
+            debug: isDev,
+            enabled: ga4Enabled,
+            gtagConfig: {
+              debug_mode: isDev,
+            },
+            measurementId: ga4MeasurementId,
+          },
           posthog: {
             debug: debugPosthog,
             enabled: posthogEnabled,

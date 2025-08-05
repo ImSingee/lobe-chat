@@ -11,6 +11,8 @@ export const LobeAnalyticsProviderWrapper = memo<Props>(({ children }) => {
   return (
     <LobeAnalyticsProvider
       debugPosthog={analyticsEnv.DEBUG_POSTHOG_ANALYTICS}
+      ga4Enabled={analyticsEnv.ENABLE_GOOGLE_ANALYTICS}
+      ga4MeasurementId={analyticsEnv.GOOGLE_ANALYTICS_MEASUREMENT_ID ?? ''}
       posthogEnabled={analyticsEnv.ENABLED_POSTHOG_ANALYTICS}
       posthogHost={analyticsEnv.POSTHOG_HOST}
       posthogToken={analyticsEnv.POSTHOG_KEY ?? ''}
